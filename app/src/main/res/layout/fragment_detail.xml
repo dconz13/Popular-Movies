@@ -1,0 +1,63 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent">
+
+<RelativeLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    tools:context="app.com.connolly.dillon.popularmovies.DetailActivityFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="title!"
+        android:id="@+id/textView_detail_title"
+        android:layout_toRightOf="@+id/imageView_detail_poster"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="20dp"
+        android:autoText="true"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="release date!"
+        android:id="@+id/textView_detail_release_date"
+        android:layout_below="@+id/textView_detail_title"
+        android:layout_alignLeft="@+id/textView_detail_title"
+        android:layout_marginTop="33dp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="plot summary!"
+        android:id="@+id/textView_detail_plot"
+        android:layout_below="@+id/imageView_detail_poster"
+        android:layout_marginTop="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="15sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="average vote!"
+        android:id="@+id/textView_detail_average_vote"
+        android:layout_below="@+id/textView_detail_release_date"
+        android:layout_alignLeft="@+id/textView_detail_release_date"
+        android:layout_alignStart="@+id/textView_detail_release_date"
+        android:layout_marginTop="33dp" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/imageView_detail_poster"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
+</ScrollView>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Strings related to Settings -->
+    <string name="pref_sort_label">Sort by:</string>
+    <string name="pref_sort_key" translateable="false">sort</string>
+    <string name="pref_sort_default" translateable="false">popularity.desc</string>
+    <string-array name="pref_sort_options">
+        <item>@string/pref_sort_popular</item>
+        <item>@string/pref_sort_rated</item>
+    </string-array>
+    <string-array name="pref_sort_values" translateable="false">
+        <item>popularity.desc</item>
+        <item>vote_average.desc</item>
+    </string-array>
+
+    <string name="pref_sort_popular">Most Popular</string>
+    <string name="pref_sort_rated">Highest Rated</string>
+
+    <!-- Legal stuff -->
+    <string name="pref_movie_db_key" translateable="false">movie_db</string>
+    <string name="pref_movie_db_label">Movie content provided by: themoviedb.org</string>
+
+
+</resources>
