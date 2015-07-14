@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -33,7 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MoviesFragment extends Fragment {
+public class MoviesFragment extends Fragment implements OnAsyncCompletedListener{
     private static final String LOG_TAG = MoviesFragment.class.getSimpleName();
     GridViewAdapter adapter;
     private static Context mContext;
@@ -41,17 +42,49 @@ public class MoviesFragment extends Fragment {
     private MovieDataStructure[] mMovieListResults;
     private ArrayList<MovieDataStructure> mMovieObjectArrayList;
     private int pageNumber;
+    private String sortSetting;
+    private OnAsyncCompletedListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState == null || !savedInstanceState.containsKey("movieArrayList")
+                || (savedInstanceState.get("sortSetting")!= PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString("sort", "popularity.desc"))){
+            updateMovieList();
+            Log.v(LOG_TAG,"UPDATING MOVIE LIST");
+        }
+        else{
+            mMovieObjectArrayList = savedInstanceState.getParcelableArrayList("movieArrayList");
+            sortSetting = savedInstanceState.getString("sortSetting");
+            Log.v(LOG_TAG,"RESTORING MOVIE LIST");
+        }
         mContext = getActivity().getApplicationContext();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList("movieArrayList", mMovieObjectArrayList);
+        outState.putString("sortSetting",sortSetting);
+        super.onSaveInstanceState(outState);
     }
 
     public MoviesFragment() {
         // Uncomment if refresh button is necessary. Otherwise leave it.
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
         mMovieObjectArrayList = new ArrayList<MovieDataStructure>();
+        listener = new OnAsyncCompletedListener() {
+            @Override
+            public void OnTaskCompleted(MovieDataStructure[] movies) {
+                if(movies!=null) {
+                    adapter.clear();
+                    adapter.addAll(movies);
+                }
+                else{
+                    networkErrorToast();
+                }
+            }
+        };
         pageNumber = 0;
     }
 
@@ -81,31 +114,37 @@ public class MoviesFragment extends Fragment {
         myGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MovieDataStructure selectedPoster = mMovieListResults[position];
+                MovieDataStructure selectedPoster = mMovieObjectArrayList.get(position);
 
                 // Create a new explicit intent
-                Intent detailIntent = new Intent(getActivity(),DetailActivity.class)
-                        .putExtra("selectedMovie",selectedPoster);
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra("selectedMovie", selectedPoster);
 
                 startActivity(detailIntent);
             }
         });
-
         return rootView;
+    }
+
+    public void networkErrorToast(){
+        Toast toast = Toast.makeText(getActivity(),"Could not connect to Internet! Check connection settings and refresh.",Toast.LENGTH_LONG);
+        toast.show();
     }
 
     @Override
     public void onStart(){
         super.onStart();
-        updateMovieList();
+        if(sortSetting != PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString("sort","popularity.desc")){
+            updateMovieList();
+        }
     }
 
     private void updateMovieList(){
-        Void params = null;
-        String sortMethod = PreferenceManager.getDefaultSharedPreferences(getActivity())
+        sortSetting = PreferenceManager.getDefaultSharedPreferences(getActivity())
                 .getString("sort","popularity.desc");
         //Log.v(LOG_TAG,"Sort Method: " + sortMethod);
-        new FetchMoviesTask().execute(sortMethod);
+        new FetchMoviesTask(listener).execute(sortSetting);
     }
 
         /* A similar GridViewAdapter implementation was found on stack overflow as a
@@ -157,15 +196,29 @@ public class MoviesFragment extends Fragment {
         }
     }
 
+    @Override
+    public void OnTaskCompleted(MovieDataStructure[] movies) {
+        if(movies!=null) {
+            adapter.clear();
+            adapter.addAll(movies);
+        }
+    }
+
     public class FetchMoviesTask extends AsyncTask<String,Void,MovieDataStructure[]>{
 
         private final String LOG_TAG = FetchMoviesTask.class.getSimpleName();
         private final String apiKey = "92ac2720e1ed27c5e4dd88c0b4fa1e1b";
+        private OnAsyncCompletedListener listener;
+
+        public FetchMoviesTask(OnAsyncCompletedListener listener){
+            this.listener = listener;
+        }
 
         @Override
-        protected void onPostExecute(MovieDataStructure[] movieList) {
-            adapter.clear();
-            adapter.addAll(mMovieListResults);
+        protected void onPostExecute(MovieDataStructure[] movies) {
+            if(listener!=null) {
+                listener.OnTaskCompleted(movies);
+            }
         }
 
         @Override
@@ -244,11 +297,11 @@ public class MoviesFragment extends Fragment {
                     mMovieObjectArrayList.add(mMovieListResults[i]);
                     //Log.v(LOG_TAG, "POSTER URL: " + mMovieListResults[i].getPosterUrl());
                 }
+                return mMovieListResults;
             }catch(JSONException e){
                 Log.e(LOG_TAG,"JSON ERROR: ", e);
                 return null;
             }
-            return null;
         }
     }
 
@@ -306,5 +359,5 @@ public class MoviesFragment extends Fragment {
         return fullUrls;
     }
 
-}
 
+}
