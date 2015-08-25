@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -28,9 +29,16 @@ public class DetailActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
         if(savedInstanceState == null){
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.MOVIE_OBJ, getIntent().getData());
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new DetailFragment())
+                    .add(R.id.container, fragment)
                     .commit();
         }
     }
@@ -58,32 +66,4 @@ public class DetailActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class DetailFragment extends Fragment {
-        private static final String LOG_TAG = DetailFragment.class.getSimpleName();
-        // TODO: Handle Intent.extra stuff to display Movie crap and poster
-        public DetailFragment() {
-
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-           Intent intent = getActivity().getIntent();
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            if(intent!=null) {
-                Bundle data = getActivity().getIntent().getExtras();
-               MovieDataStructure selectedMovie = data.getParcelable("selectedMovie");
-               ((TextView) rootView.findViewById(R.id.textView_detail_title))
-                       .setText(selectedMovie.getTitle());
-               ((TextView) rootView.findViewById(R.id.textView_detail_release_date))
-                        .setText(selectedMovie.getReleaseDate());
-               ((TextView) rootView.findViewById(R.id.textView_detail_average_vote))
-                        .setText(selectedMovie.getAverageVote()+"/10");
-               ((TextView) rootView.findViewById(R.id.textView_detail_plot))
-                        .setText(selectedMovie.getPlotSummary());
-                Picasso.with(getActivity()).load(selectedMovie.getPosterUrl()).into((ImageView)rootView.findViewById(R.id.imageView_detail_poster));
-
-           }
-            return rootView;
-        }
-    }
 }

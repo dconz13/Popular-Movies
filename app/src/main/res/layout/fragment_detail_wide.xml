@@ -1,0 +1,249 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context="app.com.connolly.dillon.popularmovies.DetailActivityFragment">
+    <!-- Layout for Image and movie info. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/background"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView_detail_poster"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingRight="5dp"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <!-- Buttons to change what is in list view. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/background"
+        android:orientation="vertical">
+        <!-- Holds either overview, trailers or reviews. -->
+        <!-- Buttons will change the visibility of these items -->
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView_detail_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:text="title!"
+                            android:textColor="@color/text"
+                            android:textSize="24sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:layout_marginBottom="2dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView_detail_rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text" />
+
+                        <View
+                            style="@style/DividerVertical"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp" />
+
+                        <TextView
+                            android:id="@+id/textView_detail_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:textColor="@color/text" />
+
+                        <View
+                            style="@style/DividerVertical"
+                            android:layout_height="15dp"
+                            android:layout_marginLeft="3dp"
+                            android:layout_marginRight="3dp" />
+
+                        <TextView
+                            android:id="@+id/textView_detail_release_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="release date!"
+                            android:textColor="@color/text" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView_detail_average_vote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="average vote!"
+                            android:textColor="@color/text" />
+
+                        <Button
+                            android:id="@+id/favorite_button"
+                            style="?android:borderlessButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginTop="20dp"
+                            android:text="favorite"
+                            android:textColor="@color/secondary_text" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/textView_detail_overview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="overview here"
+                        android:textColor="@color/text"
+                        android:visibility="visible" />
+
+                    <View
+                        style="@style/DividerHorizontal"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"></View>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="left"
+                        android:text="trailers:"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/textView_trailer1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:clickable="true"
+                        android:gravity="left"
+                        android:textColor="@color/text"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+                    <TextView
+                        android:id="@+id/textView_trailer2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:clickable="true"
+                        android:gravity="left"
+                        android:textColor="@color/text"
+                        android:textSize="14sp"
+                        android:visibility="visible" />
+
+                    <View style="@style/DividerHorizontal"></View>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reviews:"
+                        android:textAllCaps="true"
+                        android:textColor="@color/text"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:id="@+id/textView_user1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text" />
+
+                    <TextView
+                        android:id="@+id/textView_user1_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/text" />
+
+                    <TextView
+                        android:id="@+id/textView_user2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text" />
+
+                    <TextView
+                        android:id="@+id/textView_user2_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/text" />
+
+                    <TextView
+                        android:id="@+id/textView_user3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/secondary_text" />
+
+                    <TextView
+                        android:id="@+id/textView_user3_comment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textColor="@color/text" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</LinearLayout>

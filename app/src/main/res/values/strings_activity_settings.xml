@@ -8,14 +8,17 @@
     <string-array name="pref_sort_options">
         <item>@string/pref_sort_popular</item>
         <item>@string/pref_sort_rated</item>
+        <item>@string/pref_sort_favorite</item>
     </string-array>
     <string-array name="pref_sort_values" translateable="false">
         <item>popularity.desc</item>
         <item>vote_average.desc</item>
+        <item>favorite</item>
     </string-array>
 
     <string name="pref_sort_popular">Most Popular</string>
     <string name="pref_sort_rated">Highest Rated</string>
+    <string name="pref_sort_favorite">Favorites</string>
 
     <!-- Legal stuff -->
     <string name="pref_movie_db_key" translateable="false">movie_db</string>

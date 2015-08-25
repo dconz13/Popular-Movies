@@ -7,12 +7,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements MoviesFragment.Callback {
+
+    boolean mTwoPane;
+    private final String DETAILFRAGMENT_TAG = "DFTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(findViewById(R.id.movie_detail_container)!= null){
+            mTwoPane = true;
+            DetailFragment frag = new DetailFragment();
+            if(savedInstanceState == null){
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, frag, DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+
+        } else{
+          mTwoPane = false;
+            getSupportActionBar().setElevation(0f);
+        }
+
+        MoviesFragment moviesFragment = ((MoviesFragment) getSupportFragmentManager()
+        .findFragmentById(R.id.fragment));
     }
 
 
@@ -37,5 +56,27 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemSelected(MovieDataStructure selectedMovie) {
+        if(mTwoPane){
+            if(selectedMovie != null) {
+                Bundle args = new Bundle();
+                args.putParcelable(DetailFragment.MOVIE_OBJ, selectedMovie);
+
+                DetailFragment detailFragment = new DetailFragment();
+                detailFragment.setArguments(args);
+                detailFragment.isTwoPane = true;
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_container, detailFragment, DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .putExtra("selectedMovie", selectedMovie);
+            startActivity(intent);
+        }
     }
 }

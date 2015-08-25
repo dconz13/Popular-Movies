@@ -8,4 +8,5 @@ package app.com.connolly.dillon.popularmovies;
  */
 public interface OnAsyncCompletedListener {
     void OnTaskCompleted(MovieDataStructure[] movies);
+    void OnDetailTaskCompleted(MovieDataStructure movieDetail);
 }
