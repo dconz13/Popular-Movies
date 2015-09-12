@@ -3,8 +3,6 @@ package app.com.connolly.dillon.popularmovies;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
@@ -25,9 +23,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.content.CursorLoader;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import app.com.connolly.dillon.popularmovies.API.MovieService;
 import app.com.connolly.dillon.popularmovies.Model.AllMovieResults;
@@ -52,7 +48,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String SELECTED_KEY = "selected_pos";
     private String sortSetting;
     private final String API = "http://api.themoviedb.org/3"; // Base URL
-    private final String api_key = "get your own :)";
+    private final String api_key = "YOUR_API_KEY_HERE";
     private final String params = "videos,reviews,releases";
     RestAdapter mRestAdapter;
     private String mImageSize = "w342";

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Auto generated using jsonschema2pojo
 public class Releases {
 
     private List<Country> countries = new ArrayList<Country>();

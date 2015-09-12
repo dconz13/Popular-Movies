@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// Auto generated using jsonschema2pojo
 public class Videos {
 
     private List<Result> results = new ArrayList<Result>();
