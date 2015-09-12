@@ -5,6 +5,8 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import app.com.connolly.dillon.popularmovies.R;
+
 /**
  * Created by Dillon Connolly on 8/20/2015.
  */
@@ -69,14 +71,23 @@ public class MovieContract {
         public static final String COLUMN_MOVIE_LENGTH = "movie_length";
 
         // Movie overview stored as a String.
-        public static final String COLUMN_OVERVIEW = "overview"
-                ;
+        public static final String COLUMN_OVERVIEW = "overview";
+        // Vote average store as a String
+        public static final String COLUMN_VOTE_AVG = "vote_avg";
         // Url for movie poster stored as a String.
-        public static final String COLUMN_POSTER_URL = "poster";
+        public static final String COLUMN_POSTER_URL = "poster_url";
+        // Blob for movie poster.
+        public static final String COLUMN_POSTER = "poster";
         // Movie title stored as a String.
         public static final String COLUMN_MOVIE_TITLE = "title";
         // Movie id returned by the api stored as an int.
         public static final String COLUMN_MOVIE_ID = "movie_id";
+        // Boolean. true if it is a favorite movie
+        public static final String COLUMN_IS_FAVORITE = "is_favorite";
+        // Boolean. true if it came from popular api call
+        public static final String COLUMN_IS_POPULAR = "is_popular";
+        // Boolean. true if it came from highly vote api call
+        public static final String COLUMN_IS_HIGHLY_VOTED = "is_high";
 
 
         // Foreign key for the ratings table.
@@ -97,10 +108,15 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-        //Add methods to return useful information as needed
+        public static Uri buildMovieDetails(String sortSetting){
+            if(sortSetting.equals("favorite")) sortSetting = "favorite";
+            if(sortSetting.equals("popularity.desc")) sortSetting = "popular";
+            if(sortSetting.equals("vote_average.desc")) sortSetting = "vote_average";
+            return CONTENT_URI;
+        }
 
-        public static String getTitleFromUri(Uri uri){
-            return uri.getPathSegments().get(6);
+        public static Uri builderMovieWithRatingAndTrailer(int movieId){
+            return CONTENT_URI.buildUpon().appendPath(Integer.toString(movieId)).build();
         }
 
     }

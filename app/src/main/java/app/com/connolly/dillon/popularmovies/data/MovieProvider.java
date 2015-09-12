@@ -28,13 +28,28 @@ public class MovieProvider extends ContentProvider{
     static{
         mMovieQueryBuilder = new SQLiteQueryBuilder();
 
+//        mMovieQueryBuilder.setTables(
+//                MovieContract.MovieDetailsEntry.TABLE_NAME + " INNER JOIN " +
+//                        MovieContract.RatingsEntry.TABLE_NAME +
+//                        " ON " + MovieContract.MovieDetailsEntry.TABLE_NAME +
+//                        "." + MovieContract.MovieDetailsEntry.COLUMN_RATINGS_KEY +
+//                        " = " + MovieContract.RatingsEntry.TABLE_NAME +
+//                        "." + MovieContract.RatingsEntry._ID
+//        );
         mMovieQueryBuilder.setTables(
                 MovieContract.MovieDetailsEntry.TABLE_NAME + " INNER JOIN " +
                         MovieContract.RatingsEntry.TABLE_NAME +
                         " ON " + MovieContract.MovieDetailsEntry.TABLE_NAME +
                         "." + MovieContract.MovieDetailsEntry.COLUMN_RATINGS_KEY +
                         " = " + MovieContract.RatingsEntry.TABLE_NAME +
-                        "." + MovieContract.RatingsEntry._ID
+                        "." + MovieContract.RatingsEntry._ID  +
+
+                        " INNER JOIN " +
+                        MovieContract.TrailerEntry.TABLE_NAME +
+                        " ON " + MovieContract.MovieDetailsEntry.TABLE_NAME +
+                        "." + MovieContract.MovieDetailsEntry.COLUMN_TRAILER_KEY +
+                        " = " + MovieContract.TrailerEntry.TABLE_NAME +
+                        "." + MovieContract.TrailerEntry._ID
         );
     }
     //Trailer.trailer_name = ? AND trailer_key = ? AND movie_id = ?
@@ -51,24 +66,24 @@ public class MovieProvider extends ContentProvider{
                     MovieContract.RatingsEntry.COLUMN_REVIEW_AUTHOR + " = ? AND" +
                     MovieContract.RatingsEntry.COLUMN_REVIEW_CONTENT + " = ?";
 
-
     static UriMatcher buildUriMatcher(){
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_FAVORITE_MOVIE, MOVIE);
-        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_FAVORITE_MOVIE + "/*", MOVIE_WITH_RATINGS_AND_TRAILERS);
+        matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_FAVORITE_MOVIE + "/#", MOVIE_WITH_RATINGS_AND_TRAILERS);
         matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_FAVORITE_MOVIE_RATING, RATINGS);
         matcher.addURI(MovieContract.CONTENT_AUTHORITY, MovieContract.PATH_FAVORITE_MOVIE_TRAILER, TRAILERS);
 
         return matcher;
     }
 
-    private Cursor getFavoriteMovieAlphabetically(Uri uri, String[] projection, String sortOrder) {
+    private Cursor getDetailedMovieList(Uri uri, String[] projection, String sortOrder) {
         String selection = null;
         String[] selectionArgs = null;
         // TODO: figure out WTF is going on here
 
-        return mMovieQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return mMovieQueryBuilder.query(
+                mOpenHelper.getReadableDatabase(),
                 projection,
                 selection,
                 selectionArgs,
@@ -117,7 +132,7 @@ public class MovieProvider extends ContentProvider{
         Cursor returnCursor= null;
         switch(mUriMatcher.match(uri)){
             case MOVIE_WITH_RATINGS_AND_TRAILERS:
-
+                returnCursor = getDetailedMovieList(uri, projection, sortOrder);
                 break;
             // "movie"
             case MOVIE:

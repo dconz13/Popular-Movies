@@ -25,33 +25,40 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        final String SQL_CREATE_RATINGS_TABLE = "CREATE TABLE" + RatingsEntry.TABLE_NAME +" (" +
+        final String SQL_CREATE_RATINGS_TABLE = "CREATE TABLE " + RatingsEntry.TABLE_NAME +" (" +
                 RatingsEntry._ID + " INTEGER PRIMARY KEY, " +
                 RatingsEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL,"+
-                RatingsEntry.COLUMN_REVIEW_AUTHOR + " TEXT NOT NULL," +
-                RatingsEntry.COLUMN_REVIEW_CONTENT + " TEXT NOT NULL" + " );";
+                RatingsEntry.COLUMN_REVIEW_AUTHOR + " TEXT," +
+                RatingsEntry.COLUMN_REVIEW_CONTENT + " TEXT" + " );";
 
-        final String SQL_CREATE_TRAILER_TABLE = "CREATE TABLE" + TrailerEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_TRAILER_TABLE = "CREATE TABLE " + TrailerEntry.TABLE_NAME + " (" +
                 TrailerEntry._ID + " INTEGER PRIMARY KEY, " +
                 TrailerEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
-                TrailerEntry.COLUMN_TRAILER_NAME + " TEXT NOT NULL," +
-                TrailerEntry.COLUMN_TRAILER_KEY + " TEXT NOT NULL" + ");";
+                TrailerEntry.COLUMN_TRAILER_NAME + " TEXT," +
+                TrailerEntry.COLUMN_TRAILER_KEY + " TEXT" + ");";
 
-        final String SQL_CREATE_MOVIE_DETAILS_TABLE = "CREATE TABLE" + MovieDetailsEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_MOVIE_DETAILS_TABLE = "CREATE TABLE " + MovieDetailsEntry.TABLE_NAME + " (" +
                 MovieDetailsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MovieDetailsEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL," +
                 MovieDetailsEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL," +
-                MovieDetailsEntry.COLUMN_MOVIE_RATING + " TEXT NOT NULL," +
-                MovieDetailsEntry.COLUMN_MOVIE_LENGTH + " INTEGER NOT NULL," +
-                MovieDetailsEntry.COLUMN_RELEASE_DATE + " INTEGER NOT NULL," +
-                MovieDetailsEntry.COLUMN_OVERVIEW + " TEXT NOT NULL," +
-                MovieDetailsEntry.COLUMN_POSTER_URL + " TEXT NOT NULL," +
-                "FOREIGN KEY (" + MovieDetailsEntry.COLUMN_RATINGS_KEY + ") REFERENCES" +
-                RatingsEntry.TABLE_NAME + " (" + RatingsEntry._ID + "), " +
+                MovieDetailsEntry.COLUMN_MOVIE_RATING + " TEXT," +
+                MovieDetailsEntry.COLUMN_MOVIE_LENGTH + " INTEGER," +
+                MovieDetailsEntry.COLUMN_RELEASE_DATE + " TEXT," +
+                MovieDetailsEntry.COLUMN_VOTE_AVG + " INTEGER," +
+                MovieDetailsEntry.COLUMN_IS_FAVORITE + " INTEGER NOT NULL," +
+                MovieDetailsEntry.COLUMN_IS_POPULAR + " INTEGER NOT NULL," +
+                MovieDetailsEntry.COLUMN_IS_HIGHLY_VOTED + " INTEGER NOT NULL," +
+                MovieDetailsEntry.COLUMN_OVERVIEW + " TEXT," +
+                MovieDetailsEntry.COLUMN_POSTER + " BLOB," +
+                MovieDetailsEntry.COLUMN_POSTER_URL + " TEXT,"+
+                MovieDetailsEntry.COLUMN_RATINGS_KEY + " INTEGER," +
+                MovieDetailsEntry.COLUMN_TRAILER_KEY + " INTEGER," +
+                "FOREIGN KEY (" + MovieDetailsEntry.COLUMN_RATINGS_KEY + ") REFERENCES " +
+                RatingsEntry.TABLE_NAME + "(" + RatingsEntry._ID + "), " +
                 " UNIQUE (" + MovieDetailsEntry.COLUMN_MOVIE_ID + ", " +
                 MovieDetailsEntry.COLUMN_RATINGS_KEY + ") ON CONFLICT REPLACE," +
-                "FOREIGN KEY (" + MovieDetailsEntry.COLUMN_TRAILER_KEY+") REFERENCES" +
-                TrailerEntry.TABLE_NAME + " (" + TrailerEntry._ID + "), "+
+                "FOREIGN KEY (" + MovieDetailsEntry.COLUMN_TRAILER_KEY+") REFERENCES " +
+                TrailerEntry.TABLE_NAME + "(" + TrailerEntry._ID + "), "+
                 " UNIQUE (" + MovieDetailsEntry.COLUMN_MOVIE_ID + ", " +
                 MovieDetailsEntry.COLUMN_TRAILER_KEY + ") ON CONFLICT REPLACE" + ");";
 

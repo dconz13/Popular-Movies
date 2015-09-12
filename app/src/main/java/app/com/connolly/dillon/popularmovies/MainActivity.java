@@ -1,8 +1,13 @@
 package app.com.connolly.dillon.popularmovies;
 
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,27 +16,31 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
 
     boolean mTwoPane;
     private final String DETAILFRAGMENT_TAG = "DFTAG";
+    private String mSortSetting;
+    private int mMovieId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSortSetting = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(this.getString(R.string.pref_sort_key),
+                        this.getString(R.string.pref_sort_default));
+
         setContentView(R.layout.activity_main);
-        if(findViewById(R.id.movie_detail_container)!= null){
+        if (findViewById(R.id.movie_detail_container) != null) {
             mTwoPane = true;
             DetailFragment frag = new DetailFragment();
-            if(savedInstanceState == null){
+            if (savedInstanceState == null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_container, frag, DETAILFRAGMENT_TAG)
                         .commit();
             }
 
-        } else{
-          mTwoPane = false;
+        } else {
+            mTwoPane = false;
             getSupportActionBar().setElevation(0f);
         }
 
-        MoviesFragment moviesFragment = ((MoviesFragment) getSupportFragmentManager()
-        .findFragmentById(R.id.fragment));
     }
 
 
@@ -51,7 +60,7 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            startActivity(new Intent(this,SettingsActivity.class));
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
@@ -59,11 +68,33 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
     }
 
     @Override
-    public void onItemSelected(MovieDataStructure selectedMovie) {
-        if(mTwoPane){
-            if(selectedMovie != null) {
+    protected void onResume() {
+        super.onResume();
+        String sortSetting = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(this.getString(R.string.pref_sort_key),
+                        this.getString(R.string.pref_sort_default));
+        if (sortSetting != null && !sortSetting.equals(mSortSetting)) {
+            MoviesFragment moviesFragment = (MoviesFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_main);
+            if (moviesFragment != null) {
+                moviesFragment.onSettingChanged();
+            }
+            DetailFragment detailFragment = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (detailFragment != null) {
+                detailFragment.onSettingChanged(mMovieId);
+            }
+            mSortSetting = sortSetting;
+        }
+    }
+
+    @Override
+    public void onItemSelected(Uri selectedMovie, int position, int movieId) {
+        mMovieId = movieId;
+        if (mTwoPane) {
+            if (selectedMovie != null) {
                 Bundle args = new Bundle();
                 args.putParcelable(DetailFragment.MOVIE_OBJ, selectedMovie);
+                args.putInt(DetailFragment.POSITION, position);
+                args.putInt("movieId", movieId);
 
                 DetailFragment detailFragment = new DetailFragment();
                 detailFragment.setArguments(args);
@@ -75,7 +106,10 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
             }
         } else {
             Intent intent = new Intent(this, DetailActivity.class)
-                    .putExtra("selectedMovie", selectedMovie);
+                    .setData(selectedMovie)
+                    .putExtra(DetailFragment.POSITION, position)
+                    .putExtra("movieId", movieId);
+            //Log.v("Main Activity", "Position: " );
             startActivity(intent);
         }
     }
