@@ -1,30 +1,52 @@
 package app.com.connolly.dillon.popularmovies;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import app.com.connolly.dillon.popularmovies.fragments.DetailFragment;
 
+public class DetailActivity extends AppCompatActivity implements DetailFragment.Callback {
 
-public class DetailActivity extends ActionBarActivity {
+    private ViewPager mFragmentPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+//        Toolbar toolbar = (Toolbar)findViewById(R.id.detail_fragment_toolbar);
+//        setSupportActionBar(toolbar);
+
         if(savedInstanceState == null){
             Bundle args = new Bundle();
             args.putParcelable(DetailFragment.MOVIE_OBJ, getIntent().getData());
+            //args.putBoolean(DetailFragment.TRANSITION_ANIMATION, true);
 
             DetailFragment fragment = new DetailFragment();
             fragment.setArguments(args);
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, fragment)
+                    .add(R.id.detail_fragment_container, fragment)
                     .commit();
+
+            supportPostponeEnterTransition();
+        }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mFragmentPager.getCurrentItem() == 0){
+            super.onBackPressed();
+        } else {
+            mFragmentPager.setCurrentItem(mFragmentPager.getCurrentItem() - 1);
         }
     }
 
@@ -51,4 +73,12 @@ public class DetailActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // This is called from the Detail fragment callback because the ViewPager is within the Detail
+    // Fragment layout file. As soon as it's created the Detail fragment sends the reference back
+    // to the activity so that there can be special onBackPressed functionality.
+
+    @Override
+    public void setPagerVariable(ViewPager pager) {
+        this.mFragmentPager = pager;
+    }
 }

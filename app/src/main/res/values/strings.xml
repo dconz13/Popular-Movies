@@ -1,9 +1,19 @@
 <resources>
     <string name="app_name">Popular Movies</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="api_key">92ac2720e1ed27c5e4dd88c0b4fa1e1b</string>
+
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
     <string name="title_activity_detail">Movie Details</string>
     <string name="title_activity_settings">Settings</string>
     <string name="content_authority">app.com.connolly.dillon.popularmovies</string>
+
+
+    <string name="empty_trailer_list">No movie trailers available</string>
+
+    <!-- For Shared Element Transitions -->
+    <string name="detail_icon_transition_name" translatable="false">TN_DetailIcon</string>
+
+    <!-- Content Descriptions -->
+    <string name="youtube_thumb_desc" translatable="true">Thumbnail preview of the movie trailer</string>
 </resources>

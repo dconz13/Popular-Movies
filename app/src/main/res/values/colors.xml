@@ -1,8 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name ="text">#FFF</color>
-    <color name ="secondary_text">#BDBDBD</color>
-    <color name ="divider">#757575</color>
-    <color name ="background">#212121</color>
-    <color name ="red">#FF0000</color>
+    <color name="text">#FFF</color>
+    <color name="secondary_text">#BDBDBD</color>
+    <color name="divider">#757575</color>
+    <color name="background">#212121</color>
+    <color name="red">#FF0000</color>
+
+    <!-- Grey 200 -->
+    <color name="primary_light">#EEEEEE</color>
+    <!-- Grey 500 -->
+    <color name="primary_medium">#9E9E9E</color>
+    <!-- Grey 900 -->
+    <color name="primary_dark">#212121</color>
+
+    <!-- Amber A100 -->
+    <color name="accent_light">#FFE57F</color>
+    <!-- Amber A200 -->
+    <color name="accent_medium">#FFD740</color>
+    <!-- Amber A400 -->
+    <color name="accent_dark">#FFC400</color>
 </resources>

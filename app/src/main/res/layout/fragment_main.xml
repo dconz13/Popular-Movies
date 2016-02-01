@@ -1,19 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context=".fragments.MoviesFragment"-->
+    <!--android:id="@+id/fragment_main"-->
+    <!--android:background="@color/primary_dark">-->
+
+    <!--<ProgressBar-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/main_progress_bar"-->
+        <!--style="@android:style/Widget.ProgressBar"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:indeterminate="true"-->
+        <!--android:indeterminateDuration="@integer/abc_config_activityDefaultDur"-->
+        <!--/>-->
+
+    <!--<GridView android:id="@+id/gridview_movies"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="fill_parent"-->
+        <!--android:numColumns="2"-->
+        <!--android:verticalSpacing="5dp"-->
+        <!--android:horizontalSpacing="5dp"-->
+        <!--android:gravity="center"-->
+        <!--android:padding="5dp"-->
+        <!--android:background="@color/primary_dark"-->
+        <!--android:visibility="invisible"-->
+        <!--/>-->
+
+<!--</FrameLayout>-->
+
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MoviesFragment"
-    android:id="@+id/fragment_main">
-
+    android:id="@+id/fragment_main"
+    android:background="@color/primary_dark"
+    >
     <GridView android:id="@+id/gridview_movies"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:numColumns="2"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:background="@color/background"
-        />
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:numColumns="2"
+    android:verticalSpacing="5dp"
+    android:horizontalSpacing="5dp"
+    android:gravity="center"
+    android:padding="5dp"
+    android:background="@color/primary_dark"
+    />
 
-</FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

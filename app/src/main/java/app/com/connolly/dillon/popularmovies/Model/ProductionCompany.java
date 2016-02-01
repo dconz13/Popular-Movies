@@ -2,7 +2,6 @@ package app.com.connolly.dillon.popularmovies.Model;
 import java.util.HashMap;
 import java.util.Map;
 
-// Auto generated using jsonschema2pojo
 public class ProductionCompany {
 
     private String name;

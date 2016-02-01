@@ -2,9 +2,6 @@ package app.com.connolly.dillon.popularmovies.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +10,8 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import app.com.connolly.dillon.popularmovies.MoviesFragment;
 import app.com.connolly.dillon.popularmovies.R;
-import app.com.connolly.dillon.popularmovies.data.MovieContract;
 
 
 /**
@@ -37,8 +31,7 @@ public class GridViewAdapter extends CursorAdapter {
         ViewHolder viewHolder = (ViewHolder) view.getTag();
         Picasso.with(mContext)
                 .load(cursor.getString(6)) //For some reason using the COL_POSTER_URL here didn't work but setting it to 6 did?
-                .placeholder(R.drawable.loading_animation)
-                .error(R.drawable.error)
+                .error(R.drawable.no_poster)
                 .into(viewHolder.poster);
         //Log.v(LOG_TAG, "Inside bindView. Movie: " + cursor.getString(MoviesFragment.COL_POSTER_URL));
     }

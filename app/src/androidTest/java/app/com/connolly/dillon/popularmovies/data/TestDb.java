@@ -5,12 +5,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
-import junit.framework.Test;
-
 import java.util.HashSet;
 
 /**
  * Created by Dillon Connolly on 9/7/2015.
+ * Most of this testing is referenced from Udacity's testing
  */
 public class TestDb extends AndroidTestCase{
     public static final String LOG_TAG = TestDb.class.getSimpleName();

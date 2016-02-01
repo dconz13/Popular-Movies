@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:id="@+id/movie_header">
+
+    <!-- TODO: add content descriptions to everything -->
+    <!-- TODO: move all hardcoded strings to strings.xml -->
+
+    <TextView
+        android:id="@+id/textView_detail_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:text="TITLE" />
+
+    <!--<ImageView-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:id="@+id/average_vote_image"-->
+    <!--android:layout_below="@+id/textView_detail_rating"-->
+    <!--android:layout_alignLeft="@+id/textView_detail_rating"-->
+    <!--android:layout_alignStart="@+id/textView_detail_rating"-->
+    <!--android:layout_alignRight="@+id/textView_detail_release_date"-->
+    <!--android:layout_alignEnd="@+id/textView_detail_release_date"-->
+    <!--android:src="@drawable/beginner_stars"/>-->
+
+    <RatingBar
+        android:id="@+id/detail_average_vote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_alignLeft="@+id/textView_detail_rating"
+        android:layout_alignStart="@+id/textView_detail_rating"
+        android:layout_below="@+id/textView_detail_rating"
+        android:isIndicator="true"
+        android:numStars="10"
+        android:stepSize="0.1"/>
+
+    <TextView
+        android:id="@+id/textView_detail_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_detail_title"
+        android:padding="5dp"
+        android:text="R" />
+
+    <TextView
+        android:id="@+id/textView_detail_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_detail_title"
+        android:layout_toEndOf="@+id/textView_detail_rating"
+        android:layout_toRightOf="@+id/textView_detail_rating"
+        android:padding="5dp"
+        android:text="102m" />
+
+    <TextView
+        android:id="@+id/textView_detail_release_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_detail_title"
+        android:layout_toEndOf="@+id/textView_detail_duration"
+        android:layout_toRightOf="@+id/textView_detail_duration"
+        android:padding="5dp"
+        android:text="2011" />
+</RelativeLayout>

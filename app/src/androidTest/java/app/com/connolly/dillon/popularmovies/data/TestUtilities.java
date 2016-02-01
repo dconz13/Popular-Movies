@@ -15,6 +15,7 @@ import app.com.connolly.dillon.popularmovies.util.PollingCheck;
 
 /**
  * Created by Dillon Connolly on 9/7/2015.
+ * Most of this testing is referenced from Udacity's testing
  */
 public class TestUtilities extends AndroidTestCase{
     static final int TEST_MOVIE_ID = 007;

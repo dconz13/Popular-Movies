@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/linear_layout_trailers"
-    android:background="@color/background">
 
+<!-- TODO: Investigate using youtube API to make this look nicer -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/detail_youtube_img_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="@string/youtube_thumb_desc"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_trailer"
-        android:textColor="@color/text"
-        android:text="test"
-        android:layout_weight="1"/>
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_horizontal"
-        android:id="@+id/play_trailer_button"
-        android:text="play"/>
-
-</LinearLayout>
+        android:id="@+id/detail_youtube_title"
+        android:layout_below="@+id/detail_youtube_img_preview"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/primary_light"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:padding="5dp" />
+</RelativeLayout>

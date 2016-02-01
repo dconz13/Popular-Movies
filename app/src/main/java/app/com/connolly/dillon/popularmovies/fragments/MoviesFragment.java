@@ -1,13 +1,15 @@
-package app.com.connolly.dillon.popularmovies;
+package app.com.connolly.dillon.popularmovies.fragments;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import android.support.v4.app.LoaderManager;
@@ -30,14 +33,15 @@ import app.com.connolly.dillon.popularmovies.Model.AllMovieResults;
 import app.com.connolly.dillon.popularmovies.Model.DiscoverResults;
 import app.com.connolly.dillon.popularmovies.Model.Result;
 import app.com.connolly.dillon.popularmovies.Model.Result_;
+import app.com.connolly.dillon.popularmovies.R;
 import app.com.connolly.dillon.popularmovies.adapters.GridViewAdapter;
 import app.com.connolly.dillon.popularmovies.data.MovieContract;
-import retrofit.Callback;
+
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MoviesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, SwipeRefreshLayout.OnRefreshListener {
 
     private static final String LOG_TAG = MoviesFragment.class.getSimpleName();
     GridViewAdapter mGridViewAdapter;
@@ -48,10 +52,10 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     private static final String SELECTED_KEY = "selected_pos";
     private String sortSetting;
     private final String API = "http://api.themoviedb.org/3"; // Base URL
-    private final String api_key = "YOUR_API_KEY_HERE";
     private final String params = "videos,reviews,releases";
     RestAdapter mRestAdapter;
     private String mImageSize = "w342";
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     private static final String[] MOVIE_COLUMNS = {
             MovieContract.MovieDetailsEntry.TABLE_NAME + "." + MovieContract.MovieDetailsEntry._ID,
@@ -102,6 +106,9 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         //if(mGridViewAdapter == null)
         //   mGridViewAdapter = new GridViewAdapter(getActivity(), data, 0);
         // else
+        //mProgress.setVisibility(View.GONE);
+        //mGridView.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setRefreshing(false);
         mGridViewAdapter.swapCursor(data);
         //mGridView.setAdapter(mGridViewAdapter);
         if (mPosition != GridView.INVALID_POSITION) {
@@ -119,13 +126,15 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         updateMovieList();
         Log.v(LOG_TAG, "SETTING CHANGED");
         getLoaderManager().restartLoader(MOVIE_LOADER, null, this);
-//        getLoaderManager().destroyLoader(MOVIE_LOADER);
-//        getLoaderManager().initLoader(MOVIE_LOADER, null, this);
     }
 
     public interface Callback {
+        public void onItemSelected(Uri selectedMovie, int position, int movieId, View view);
+    }
 
-        public void onItemSelected(Uri selectedMovie, int position, int movieId);
+    @Override
+    public void onRefresh() {
+        updateMovieList();
     }
 
     @Override
@@ -139,29 +148,16 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         if(savedInstanceState != null){
             sortSetting = savedInstanceState.getString("sortSetting");
             mPosition = savedInstanceState.getInt(SELECTED_KEY);
-            Log.v(LOG_TAG,"RESTORING MOVIE LIST");
+            //Log.v(LOG_TAG,"RESTORING MOVIE LIST");
         }else{
             updateMovieList();
-            Log.v(LOG_TAG,"UPDATING MOVIE LIST");
+            //Log.v(LOG_TAG,"UPDATING MOVIE LIST");
         }
-//        if (savedInstanceState == null || (savedInstanceState.get("sortSetting") !=
-//                PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("sort", "popularity.desc"))
-//                || !savedInstanceState.containsKey(SELECTED_KEY)) {
-//            updateMovieList();
-//            Log.v(LOG_TAG, "UPDATING MOVIE LIST");
-//        } else {
-//            sortSetting = savedInstanceState.getString("sortSetting");
-//            mPosition = savedInstanceState.getInt(SELECTED_KEY);
-//            Log.v(LOG_TAG, "RESTORING MOVIE LIST");
-//        }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        //outState.putParcelableArrayList("movieArrayList", mMovieObjectArrayList);
-        //outState.putString("sortSetting", sortSetting);
-        //super.onSaveInstanceState(outState);
-        Log.v(LOG_TAG,"MPOSITION: "+mPosition + " " + GridView.INVALID_POSITION);
+        //Log.v(LOG_TAG,"MPOSITION: "+mPosition + " " + GridView.INVALID_POSITION);
         if (mPosition != GridView.INVALID_POSITION) {
             outState.putInt(SELECTED_KEY, mPosition);
             outState.putString("sortSetting", sortSetting);
@@ -194,7 +190,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_refresh) {
             // TODO: Enable this as needed by programmer. Enabled by uncommenting setHasOptionsMenu from MoviesFragment()
-            updateMovieList();
+            onRefresh();
             return true;
         }
         return false;
@@ -205,6 +201,11 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
                              Bundle savedInstanceState) {
         mGridViewAdapter = new GridViewAdapter(getActivity(), null, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.fragment_main);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setRefreshing(true);
+
         mGridView = (GridView) rootView.findViewById(R.id.gridview_movies);
         mGridView.setAdapter(mGridViewAdapter);
 
@@ -219,7 +220,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
                     int movieId = cursor.getInt(COL_MOVIE_ID);
                     ((Callback) getActivity())
                             .onItemSelected(MovieContract.MovieDetailsEntry.builderMovieWithRatingAndTrailer(cursor.getInt(COL_MOVIE_ID)), position
-                                    , movieId);
+                                    , movieId,view);
                     //Log.v(LOG_TAG,"MOVIE ID: "+ cursor.getInt(COL_MOVIE_ID));
                     mPosition = position;
                 }
@@ -233,7 +234,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     public void networkErrorToast() {
-        Toast toast = Toast.makeText(getActivity(), "Could not connect to Internet! Check connection settings and refresh.", Toast.LENGTH_LONG);
+        Toast toast = Toast.makeText(getActivity(), "Could not connect to Internet! Check connection settings and swipe down to refresh.", Toast.LENGTH_LONG);
         toast.show();
     }
 
@@ -254,6 +255,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
         if (!sortSetting.equals("favorite") && sortSetting != null) {
             //Log.v(LOG_TAG, "sortSetting: " + sortSetting);
+            String api_key = getResources().getString(R.string.api_key);
             MovieService movieService = mRestAdapter.create(MovieService.class);
             retrofit.Callback callback = createDiscoverResultsCallback();
             movieService.getMovieList(sortSetting, api_key, callback);
@@ -264,14 +266,17 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         retrofit.Callback callback = new retrofit.Callback() {
             @Override
             public void failure(RetrofitError retrofitError) {
-                Log.v(LOG_TAG, "Retrofit error: ", retrofitError);
+                Log.e(LOG_TAG, "Retrofit error: ", retrofitError);
+                networkErrorToast();
             }
 
+            // TODO: try creating an AsyncTask in the success method. Have it handle the progress bar.
             @Override
             public void success(Object o, Response response) {
+                String api_key = getResources().getString(R.string.api_key);
                 DiscoverResults discoverResults = (DiscoverResults) o;
                 if (discoverResults.getResults().size() == 0) {
-                    Log.v(LOG_TAG, "Woops the array is length 0.");
+                    //Log.v(LOG_TAG, "Woops the array is length 0.");
                 } else {
                     MovieService movieService = mRestAdapter.create(MovieService.class);
                     for (int i = 0; i < discoverResults.getResults().size(); i++) {
@@ -303,7 +308,7 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
 
                             @Override
                             public void failure(RetrofitError retrofitError) {
-                                Log.v(LOG_TAG, "Woops too much!");
+                                Log.e(LOG_TAG, "Woops too much!");
                             }
                         };
                         movieService.getMovieInfo(discoverResults.getResults().get(i).getId(), api_key, params, allTestCallback);
@@ -358,6 +363,9 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         return movieValues;
     }
 
+    // Important to note that this method stores all the trailers in a single string separated by the | character.
+    // This isn't the best method because it relies on the Strings not containing | for it to work.
+
     public ContentValues makeTrailerContentValue(List<Result> trailerResult, int movieId) {
         ContentValues trailerValues = new ContentValues();
         if (trailerResult.size() > 0) {
@@ -365,7 +373,6 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
             String names = "";
             String keys = "";
             for(int i = 0; i<trailerResult.size(); i++) {
-                if(i > 1) break;
                 if(i == 0){
                     names = names.concat(trailerResult.get(i).getName());
                     keys = keys.concat(trailerResult.get(i).getKey());
@@ -387,13 +394,15 @@ public class MoviesFragment extends Fragment implements LoaderManager.LoaderCall
         return trailerValues;
     }
 
+    // Important to note that this method stores all the comments and authors in a single string separated by the | character.
+    // This isn't the best method because it relies on the Strings not containing | for it to work.
+
     public ContentValues makeReviewContentValues(List<Result_> reviewResult, int movieId) {
         ContentValues reviewValues = new ContentValues();
         if (reviewResult.size() > 0) {
             String authors = "";
             String contents = "";
             for(int i = 0; i<reviewResult.size(); i++) {
-                if(i > 2) break;
                 if(i == 0){
                     authors = authors.concat(reviewResult.get(i).getAuthor());
                     contents = contents.concat(reviewResult.get(i).getContent());

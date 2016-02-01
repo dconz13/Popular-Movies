@@ -16,6 +16,7 @@ import junit.framework.Test;
 
 /**
  * Created by Dillon Connolly on 9/7/2015.
+ * Most of this testing is referenced from Udacity's testing
  */
 public class TestMovieProvider extends AndroidTestCase {
 

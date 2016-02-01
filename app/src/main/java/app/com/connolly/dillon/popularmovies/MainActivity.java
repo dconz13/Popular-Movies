@@ -3,14 +3,24 @@ package app.com.connolly.dillon.popularmovies;
 import android.content.Intent;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v7.app.AppCompatActivity;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import app.com.connolly.dillon.popularmovies.adapters.GridViewAdapter;
+import app.com.connolly.dillon.popularmovies.fragments.DetailFragment;
+import app.com.connolly.dillon.popularmovies.fragments.MoviesFragment;
 
 
-public class MainActivity extends ActionBarActivity implements MoviesFragment.Callback {
+public class MainActivity extends AppCompatActivity implements MoviesFragment.Callback {
 
     boolean mTwoPane;
     private final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -36,7 +46,11 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
 
         } else {
             mTwoPane = false;
-            getSupportActionBar().setElevation(0f);
+            try {
+                getSupportActionBar().setElevation(0f);
+            }catch(NullPointerException e){
+                Log.e("MainActivity", e.getMessage());
+            }
         }
 
     }
@@ -85,7 +99,7 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
     }
 
     @Override
-    public void onItemSelected(Uri selectedMovie, int position, int movieId) {
+    public void onItemSelected(Uri selectedMovie, int position, int movieId, View view) {
         mMovieId = movieId;
         if (mTwoPane) {
             if (selectedMovie != null) {
@@ -93,6 +107,7 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
                 args.putParcelable(DetailFragment.MOVIE_OBJ, selectedMovie);
                 args.putInt(DetailFragment.POSITION, position);
                 args.putInt("movieId", movieId);
+                args.putBoolean(DetailFragment.TRANSITION_ANIMATION,false);
 
                 DetailFragment detailFragment = new DetailFragment();
                 detailFragment.setArguments(args);
@@ -106,9 +121,15 @@ public class MainActivity extends ActionBarActivity implements MoviesFragment.Ca
             Intent intent = new Intent(this, DetailActivity.class)
                     .setData(selectedMovie)
                     .putExtra(DetailFragment.POSITION, position)
-                    .putExtra("movieId", movieId);
+                    .putExtra("movieId", movieId)
+                    .putExtra(DetailFragment.TRANSITION_ANIMATION,true);
+
+            ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat
+                    .makeSceneTransitionAnimation(this,
+                            new Pair<View, String>(view.findViewById(R.id.grid_item_movies_imageView), getString(R.string.detail_icon_transition_name)));
             //Log.v("Main Activity", "Position: " );
-            startActivity(intent);
+            ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
+            //startActivity(intent);
         }
     }
 }
